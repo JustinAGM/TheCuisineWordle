@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wordle Game</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='index.css') }}?v={{ timestamp }}"
+    />
+  </head>
+  <body>
+    <h1>The Cuisine</h1>
+    <h3>Wordle Game</h3>
+
+    {% if message %}
+    <p class="error">{{ message }}</p>
+    {% endif %} {% for row in rows %}
+    <div class="row">{{ row|safe }}</div>
+    {% endfor %} {% for _ in range(attempts_left) %}
+    <div class="row">
+      {% for _ in range(5) %}
+      <span class="tile empty">_</span>{% endfor %}
+    </div>
+    {% endfor %} {% if not game_over %}
+    <form method="post">
+      <input
+        type="text"
+        class="guessing-box"
+        name="guess"
+        maxlength="5"
+        required
+        autofocus
+        placeholder="Enter your guess"
+      />
+      <button type="submit">Submit</button>
+    </form>
+    {% endif %} {% if game_over %}
+    <p class="end">
+      {{ "🎉 Solved!" if is_solved else "💥 Failed! The word was: " + solution
+      }}
+    </p>
+    <a href="{{ url_for('reset') }}">Play Again</a>
+    {% endif %}
+  </body>
+</html>
